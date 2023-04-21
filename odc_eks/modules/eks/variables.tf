@@ -176,6 +176,17 @@ variable "node_extra_tags" {
 
 variable "metadata_options" {
   description = "Metadata options for the EKS node launch templates. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options"
-  type        = map(any)
-  default     = {}
+  type        = object({
+    http_endpoint               = optional(string, "enabled")
+    http_protocol_ipv6          = optional(string)
+    http_put_response_hop_limit = optional(number)
+    http_tokens                 = optional(string, "required")
+    instance_metadata_tags      = optional(string)
+  })
+
+  # If http_tokens is required then http_endpoint must be enabled.
+  validation {
+    condition     = var.metadata_options.http_tokens != "required" || var.metadata_options.http_endpoint == "enabled"
+    error_message = "If http_tokens is required for nodes then http_endpoint must be enabled."
+  }
 }

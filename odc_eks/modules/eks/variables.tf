@@ -179,7 +179,7 @@ variable "metadata_options" {
   type        = object({
     http_endpoint               = optional(string, "enabled")
     http_protocol_ipv6          = optional(string)
-    http_put_response_hop_limit = optional(number)
+    http_put_response_hop_limit = optional(number, 2) # Required for alb controller to work
     http_tokens                 = optional(string, "required")
     instance_metadata_tags      = optional(string)
   })

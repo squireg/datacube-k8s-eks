@@ -307,6 +307,7 @@ variable "metadata_options" {
     http_tokens                 = optional(string, "required")
     instance_metadata_tags      = optional(string)
   })
+  default = {}
 
   # If http_tokens is required then http_endpoint must be enabled.
   validation {

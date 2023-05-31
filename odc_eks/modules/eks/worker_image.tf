@@ -21,8 +21,9 @@ locals {
 #!/bin/bash
 set -o xtrace
 # Get instance and ami id from the aws ec2 metadate endpoint
-id=$(curl http://169.254.169.254/latest/meta-data/instance-id -s)
-ami=$(curl http://169.254.169.254/latest/meta-data/ami-id -s)
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" -s)
+id=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id -s)
+ami=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/ami-id -s)
 /etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.eks.endpoint}' --b64-cluster-ca '${aws_eks_cluster.eks.certificate_authority[0].data}' '${aws_eks_cluster.eks.id}' ${var.extra_bootstrap_args} \
 --kubelet-extra-args \
   "--node-labels=cluster=${aws_eks_cluster.eks.id},nodegroup=${var.node_group_name},nodetype=ondemand,instance-id=$id,ami-id=$ami \
@@ -34,8 +35,9 @@ USERDATA
 #!/bin/bash
 set -o xtrace
 # Get instance and ami id from the aws ec2 metadate endpoint
-id=$(curl http://169.254.169.254/latest/meta-data/instance-id -s)
-ami=$(curl http://169.254.169.254/latest/meta-data/ami-id -s)
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" -s)
+id=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id -s)
+ami=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/ami-id -s)
 /etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.eks.endpoint}' --b64-cluster-ca '${aws_eks_cluster.eks.certificate_authority[0].data}' '${aws_eks_cluster.eks.id}' ${var.extra_bootstrap_args} \
 --kubelet-extra-args \
   "--node-labels=cluster=${aws_eks_cluster.eks.id},nodegroup=${var.node_group_name},nodetype=spot,instance-id=$id,ami-id=$ami \

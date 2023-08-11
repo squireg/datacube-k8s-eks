@@ -315,3 +315,46 @@ variable "metadata_options" {
     error_message = "If http_tokens is required for nodes then http_endpoint must be enabled."
   }
 }
+
+variable "addon_vpccni_enable" {
+  description = "Whether to create/update the vpc-cni managed add on."
+  type        = bool
+  default     = true
+}
+
+variable "addon_vpccni_version" {
+  description = "Version of the vpc-cni add-on to use, defaults to latest."
+  type        = string
+  default     = null
+}
+
+variable "addon_vpccni_resolve_create" {
+  description = "How to resolve conflicts on add-on creation (NONE, OVERWRITE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE"], var.addon_vpccni_resolve_create)
+    error_message = "The addon_vpccni_resolve_create value must be one of ('NONE', 'OVERWRITE')"
+  }
+}
+
+variable "addon_vpccni_resolve_update" {
+  description = "How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_vpccni_resolve_update)
+    error_message = "The addon_vpccni_resolve_update value must be one of ('NONE', 'OVERWRITE', 'PRESERVE')"
+  }
+}
+
+variable "addon_vpccni_config" {
+  description = "Custom configuration for the vpc-cni addon (JSON string)."
+  type        = string
+  default     = jsonencode({
+    livenessProbeTimeoutSeconds = 15
+    readinessProbeTimeoutSeconds = 15
+  })
+}

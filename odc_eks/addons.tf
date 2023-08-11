@@ -3,7 +3,7 @@ resource "aws_eks_addon" "vpc_cni" {
 
     cluster_name  = module.eks.cluster_id
     addon_name    = "vpc-cni"
-    addon_version = addon_vpccni_version
+    addon_version = var.addon_vpccni_version
     configuration_values = jsonencode(var.addon_vpccni_config)
 
     # This will change to resolve_conflicts_{create,update} using separate vars

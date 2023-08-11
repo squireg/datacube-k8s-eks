@@ -175,6 +175,17 @@ module "odc_eks" {
 | certificate_arn        | Certificate ARN                                                                      | false       |
 | public_route_table_ids | Public subnet route tables                                                           | false       |
 
+### Input - EKS Managed add-ons
+
+#### VPC-CNI
+| Name                            | Description                                                                                                                                                                                                            | Type         | Default                                          | Required |
+| ---------------------------- | -------------                                                                                                                                                                                                          | :----:       | :-----:                                          | :-----:  |
+| addon_vpccni_enable | Whether to create/update the vpc-cni managed add on | bool | true | false |
+| addon_vpccni_version | Version of the vpc-cni add-on to use, defaults to latest | string | null | false |
+| addon_vpccni_resolve_create | How to resolve conflicts on add-on creation (NONE, OVERWRITE) | string | "OVERWRITE" | false |
+| addon_vpccni_resolve_update | How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE) | string | "OVERWRITE" | false |
+| addon_vpccni_config | Custom configuration for the vpc-cni addon (JSON string). | string | '{"livenessProbeTimeoutSeconds":15,"readinessProbeTimeoutSeconds":15}' | false |
+
 ### Input - Extensions
 
 #### CloudFront Distribution

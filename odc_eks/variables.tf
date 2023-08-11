@@ -351,10 +351,10 @@ variable "addon_vpccni_resolve_update" {
 }
 
 variable "addon_vpccni_config" {
-  description = "Custom configuration for the vpc-cni addon (JSON string)."
-  type        = string
-  default     = jsonencode({
+  description = "Custom configuration for the vpc-cni addon (use `aws eks describe-addon-configuration` to see schema)"
+  type        = object()
+  default     = {
     livenessProbeTimeoutSeconds = 15
     readinessProbeTimeoutSeconds = 15
-  })
+  }
 }

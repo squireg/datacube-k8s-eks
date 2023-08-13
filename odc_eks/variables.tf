@@ -325,7 +325,7 @@ variable "addon_vpccni_enable" {
 variable "addon_vpccni_version" {
   description = "Version of the vpc-cni add-on to use, defaults to latest."
   type        = string
-  default     = null
+  default     = "v1.13.4-eksbuild.1"
 }
 
 variable "addon_vpccni_resolve_create" {

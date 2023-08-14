@@ -369,7 +369,7 @@ variable "addon_kubeproxy_enable" {
 variable "addon_kubeproxy_version" {
   description = "Version of the kube-proxy add-on to use, defaults to latest."
   type        = string
-  default     = null
+  default     = "v1.25.11-eksbuild.2"
 }
 
 variable "addon_kubeproxy_resolve_create" {
@@ -409,7 +409,7 @@ variable "addon_coredns_enable" {
 variable "addon_coredns_version" {
   description = "Version of the coredns add-on to use, defaults to latest."
   type        = string
-  default     = null
+  default     = "v1.9.3-eksbuild.5"
 }
 
 variable "addon_coredns_resolve_create" {

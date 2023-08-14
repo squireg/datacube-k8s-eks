@@ -186,6 +186,24 @@ module "odc_eks" {
 | addon_vpccni_resolve_update | How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE) | string | "OVERWRITE" | false |
 | addon_vpccni_config | Custom configuration for the vpc-cni addon.  Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema. | any | {livenessProbeTimeoutSeconds=15, readinessProbeTimeoutSeconds=15} | false |
 
+#### Kube-proxy
+| Name                            | Description                                                                                                                                                                                                            | Type         | Default                                          | Required |
+| ---------------------------- | -------------                                                                                                                                                                                                          | :----:       | :-----:                                          | :-----:  |
+| addon_kubeproxy_enable | Whether to create/update the kube-proxy managed add on | bool | true | false |
+| addon_kubeproxy_version | Version of the kube-proxy add-on to use, defaults to latest | string | null | false |
+| addon_kubeproxy_resolve_create | How to resolve conflicts on add-on creation (NONE, OVERWRITE) | string | "OVERWRITE" | false |
+| addon_kubeproxy_resolve_update | How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE) | string | "OVERWRITE" | false |
+| addon_kubeproxy_config | Custom configuration for the kube-proxy addon.  Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema. | any | null | false |
+
+#### COREDNS
+| Name                            | Description                                                                                                                                                                                                            | Type         | Default                                          | Required |
+| ---------------------------- | -------------                                                                                                                                                                                                          | :----:       | :-----:                                          | :-----:  |
+| addon_coredns_enable | Whether to create/update the coredns managed add on | bool | true | false |
+| addon_coredns_version | Version of the coredns add-on to use, defaults to latest | string | null | false |
+| addon_coredns_resolve_create | How to resolve conflicts on add-on creation (NONE, OVERWRITE) | string | "OVERWRITE" | false |
+| addon_coredns_resolve_update | How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE) | string | "OVERWRITE" | false |
+| addon_coredns_config | Custom configuration for the coredns addon.  Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema. | any | null | false |
+
 ### Input - Extensions
 
 #### CloudFront Distribution

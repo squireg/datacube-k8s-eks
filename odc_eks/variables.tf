@@ -353,8 +353,89 @@ variable "addon_vpccni_resolve_update" {
 variable "addon_vpccni_config" {
   description = "Custom configuration for the vpc-cni addon. Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema."
   type        = any
+  nullable    = true
   default     = {
     livenessProbeTimeoutSeconds = 15
     readinessProbeTimeoutSeconds = 15
   }
+}
+
+variable "addon_kubeproxy_enable" {
+  description = "Whether to create/update the kube-proxy managed add on."
+  type        = bool
+  default     = true
+}
+
+variable "addon_kubeproxy_version" {
+  description = "Version of the kube-proxy add-on to use, defaults to latest."
+  type        = string
+  default     = null
+}
+
+variable "addon_kubeproxy_resolve_create" {
+  description = "How to resolve conflicts on add-on creation (NONE, OVERWRITE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE"], var.addon_kubeproxy_resolve_create)
+    error_message = "The addon_kubeproxy_resolve_create value must be one of ('NONE', 'OVERWRITE')"
+  }
+}
+
+variable "addon_kubeproxy_resolve_update" {
+  description = "How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_kubeproxy_resolve_update)
+    error_message = "The addon_kubeproxy_resolve_update value must be one of ('NONE', 'OVERWRITE', 'PRESERVE')"
+  }
+}
+
+variable "addon_kubeproxy_config" {
+  description = "Custom configuration for the kube-proxy addon. Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema."
+  type        = any
+  default     = null
+}
+
+variable "addon_coredns_enable" {
+  description = "Whether to create/update the coredns managed add on."
+  type        = bool
+  default     = true
+}
+
+variable "addon_coredns_version" {
+  description = "Version of the coredns add-on to use, defaults to latest."
+  type        = string
+  default     = null
+}
+
+variable "addon_coredns_resolve_create" {
+  description = "How to resolve conflicts on add-on creation (NONE, OVERWRITE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE"], var.addon_coredns_resolve_create)
+    error_message = "The addon_coredns_resolve_create value must be one of ('NONE', 'OVERWRITE')"
+  }
+}
+
+variable "addon_coredns_resolve_update" {
+  description = "How to resolve conflicts on add-on update (NONE, OVERWRITE, PRESERVE)"
+  type        = string
+  default     = "OVERWRITE"
+  
+  validation {
+    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_coredns_resolve_update)
+    error_message = "The addon_coredns_resolve_update value must be one of ('NONE', 'OVERWRITE', 'PRESERVE')"
+  }
+}
+
+variable "addon_coredns_config" {
+  description = "Custom configuration for the coredns addon. Will be encoded as a json string. Use `aws eks describe-addon-configuration` to see schema."
+  type        = any
+  default     = null
 }

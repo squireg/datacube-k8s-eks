@@ -23,3 +23,16 @@ resource "aws_eks_addon" "kube-proxy" {
     # when we upgrade to aws provider v5.
     resolve_conflicts = var.addon_kubeproxy_resolve_update
 }
+
+resource "aws_eks_addon" "coredns" {
+    count = var.addon_coredns_enable ? 1 : 0
+
+    cluster_name  = module.eks.cluster_id
+    addon_name    = "coredns"
+    addon_version = var.addon_coredns_version
+    configuration_values = var.addon_coredns_config == null ? null : jsonencode(var.addon_coredns_config)
+
+    # This will change to resolve_conflicts_{create,update} using separate vars
+    # when we upgrade to aws provider v5.
+    resolve_conflicts = var.addon_coredns_resolve_update
+}

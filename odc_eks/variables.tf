@@ -28,6 +28,7 @@ variable "cluster_id" {
 variable "cluster_version" {
   description = "EKS Cluster version to use"
   type        = string
+  default     = "1.25"
 }
 
 variable "admin_access_CIDRs" {

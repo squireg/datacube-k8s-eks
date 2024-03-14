@@ -298,10 +298,14 @@ resource "aws_s3_bucket" "waf_log_bucket" {
   )
 }
 
-resource "aws_s3_bucket_acl" "waf_log_bucket" {
-  count  = (var.waf_log_bucket_create && var.waf_enable) ? 1 : 0
+resource "aws_s3_bucket_public_access_block" "waf_log_bucket" {
+  count  = (var.waf_log_bucket_create && var.waf_enable) ? 1 : 0  
+
   bucket = aws_s3_bucket.waf_log_bucket[0].id
-  acl    = "private"
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "waf_log_bucket" {

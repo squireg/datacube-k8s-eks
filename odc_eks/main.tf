@@ -74,8 +74,6 @@ module "vpc_endpoints" {
 
   vpc_id = module.vpc.vpc_id
 
-  security_group_ids = []
-
   create_security_group      = true
   security_group_name_prefix = "${local.name}-vpc-endpoints-"
   security_group_description = "VPC endpoint security group"
@@ -94,7 +92,9 @@ module "vpc_endpoints" {
         private_dns_only_for_inbound_resolver_endpoint = false
       }
       tags = { Name = "s3-vpc-endpoint" }
-    },
+    }
+  }
+}
 
 # Creates network and Kuberenetes master nodes
 module "eks" {

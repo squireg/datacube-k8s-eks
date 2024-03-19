@@ -16,7 +16,9 @@ locals {
 }
 
 module "vpc" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v5.6.0"
+  # source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v5.6.0"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.6.0"
 
   count = var.create_vpc ? 1 : 0
 
@@ -53,7 +55,6 @@ module "vpc" {
   enable_nat_gateway           = var.enable_nat_gateway
   create_igw                   = var.create_igw
   create_database_subnet_group = true
-  enable_s3_endpoint           = var.enable_s3_endpoint
 
   tags = merge(
     {
@@ -65,6 +66,35 @@ module "vpc" {
     var.tags
   )
 }
+
+module "vpc_endpoints" {
+  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+
+  count = var.create_vpc ? 1 : 0
+
+  vpc_id = module.vpc.vpc_id
+
+  security_group_ids = []
+
+  create_security_group      = true
+  security_group_name_prefix = "${local.name}-vpc-endpoints-"
+  security_group_description = "VPC endpoint security group"
+  security_group_rules = {
+    ingress_https = {
+      description = "HTTPS from VPC"
+      cidr_blocks = [module.vpc.vpc_cidr_block]
+    }
+  }
+
+  endpoints = {
+    s3 = {
+      service             = "s3"
+      private_dns_enabled = true
+      dns_options = {
+        private_dns_only_for_inbound_resolver_endpoint = false
+      }
+      tags = { Name = "s3-vpc-endpoint" }
+    },
 
 # Creates network and Kuberenetes master nodes
 module "eks" {

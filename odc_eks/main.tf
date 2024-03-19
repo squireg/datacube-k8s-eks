@@ -16,7 +16,7 @@ locals {
 }
 
 module "vpc" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v2.70.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v5.6.0"
 
   count = var.create_vpc ? 1 : 0
 

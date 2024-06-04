@@ -18,6 +18,7 @@ locals {
 module "vpc" {
   # source = "git::https://github.com/terraform-aws-modules/terraform-aws-vpc.git?ref=v5.6.0"
   source  = "terraform-aws-modules/vpc/aws"
+  # version = "3.19.0"
   version = "5.6.0"
 
   count = var.create_vpc ? 1 : 0
@@ -49,8 +50,9 @@ module "vpc" {
     "SubnetType" = "Database"
   }
 
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+  # These default to true now
+  # enable_dns_hostnames = true
+  # enable_dns_support   = true
 
   enable_nat_gateway           = var.enable_nat_gateway
   create_igw                   = var.create_igw
@@ -68,32 +70,54 @@ module "vpc" {
 }
 
 module "vpc_endpoints" {
-  source = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+  source  = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
+  version = "5.6.0"
 
   count = var.create_vpc ? 1 : 0
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = module.vpc[0].vpc_id
 
   create_security_group      = true
-  security_group_name_prefix = "${local.name}-vpc-endpoints-"
+  security_group_name_prefix = "${local.cluster_id}-vpc-endpoints-"
   security_group_description = "VPC endpoint security group"
   security_group_rules = {
     ingress_https = {
       description = "HTTPS from VPC"
-      cidr_blocks = [module.vpc.vpc_cidr_block]
+      cidr_blocks = [module.vpc[0].vpc_cidr_block]
     }
   }
 
   endpoints = {
     s3 = {
       service             = "s3"
+      service_type        = "Gateway"
       private_dns_enabled = true
+      route_table_ids = flatten([
+        module.vpc[0].intra_route_table_ids, 
+        module.vpc[0].private_route_table_ids, 
+        module.vpc[0].public_route_table_ids
+      ])
+
       dns_options = {
         private_dns_only_for_inbound_resolver_endpoint = false
       }
-      tags = { Name = "s3-vpc-endpoint" }
+
+      tags = merge(
+        {
+          Name        = "${local.cluster_id}-vpc"
+          owner       = var.owner
+          namespace   = var.namespace
+          environment = var.environment
+        },
+        var.tags
+      )
     }
   }
+}
+
+moved {
+  from = module.vpc[0].aws_vpc_endpoint.s3[0]
+  to   = module.vpc_endpoints[0].aws_vpc_endpoint.this["s3"]
 }
 
 # Creates network and Kuberenetes master nodes
